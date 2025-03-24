@@ -10,6 +10,7 @@ import {
   User,
   ShoppingBag,
   FolderTree,
+  Tag,
 } from "lucide-react";
 
 export const navigation = [
@@ -20,24 +21,31 @@ export const navigation = [
   },
   {
     name: "Sales",
-    href: "/orders",
+    href: "/",
     icon: ShoppingCart,
     items: [
       {
         name: "Orders",
         href: "/orders",
         icon: ShoppingBag,
-      },
-      {
-        name: "Products",
-        href: "/products",
-        icon: Package,
-      },
+      },   
+    ],
+  },
+  {
+    name: "Catalog",
+    href: "/",
+    icon: Tag,
+    items: [
       {
         name: "Categories",
         href: "/categories",
         icon: FolderTree,
       },
+      {
+        name: "Products",
+        href: "/products",
+        icon: Package,
+      },      
     ],
   },
   {
