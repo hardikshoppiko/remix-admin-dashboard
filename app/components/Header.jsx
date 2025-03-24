@@ -1,12 +1,13 @@
 import { Link, useLocation } from "@remix-run/react";
 import { cn } from "../utils/cn";
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { navigation, userNavigation } from "../config/navigation";
 
 export default function Header() {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
 
   // Close mobile menu when route changes
   useEffect(() => {
@@ -37,7 +38,57 @@ export default function Header() {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-4">
               {navigation.map((item) => {
-                const isActive = location.pathname === item.href;
+                const isActive = item.items 
+                  ? item.items.some(subItem => subItem.href === location.pathname)
+                  : location.pathname === item.href;
+
+                if (item.items) {
+                  return (
+                    <div 
+                      key={item.name}
+                      className="relative"
+                      onMouseEnter={() => setActiveDropdown(item.name)}
+                      onMouseLeave={() => setActiveDropdown(null)}
+                    >
+                      <button
+                        className={cn(
+                          "px-3 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center",
+                          isActive
+                            ? "bg-blue-50 text-blue-700"
+                            : "text-gray-700 hover:bg-gray-50"
+                        )}
+                      >
+                        <item.icon className="w-4 h-4 mr-2" />
+                        {item.name}
+                        <ChevronDown className="w-4 h-4 ml-1" />
+                      </button>
+                      <div className={cn(
+                        "absolute top-full left-0 w-48 bg-white rounded-md shadow-lg py-1 z-50",
+                        activeDropdown === item.name ? "block" : "hidden"
+                      )}>
+                        {item.items.map((subItem) => {
+                          const isSubActive = location.pathname === subItem.href;
+                          return (
+                            <Link
+                              key={subItem.name}
+                              to={subItem.href}
+                              className={cn(
+                                "flex items-center px-4 py-2 text-sm",
+                                isSubActive
+                                  ? "bg-blue-50 text-blue-700"
+                                  : "text-gray-700 hover:bg-gray-50"
+                              )}
+                            >
+                              <subItem.icon className="w-4 h-4 mr-2" />
+                              {subItem.name}
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                }
+
                 return (
                   <Link
                     key={item.name}
@@ -94,7 +145,52 @@ export default function Header() {
           >
             <nav className="py-2 px-2 space-y-1 border-t bg-white">
               {navigation.map((item) => {
-                const isActive = location.pathname === item.href;
+                const isActive = item.items 
+                  ? item.items.some(subItem => subItem.href === location.pathname)
+                  : location.pathname === item.href;
+
+                if (item.items) {
+                  return (
+                    <div key={item.name}>
+                      <div className={cn(
+                        "px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                        isActive
+                          ? "bg-blue-50 text-blue-700"
+                          : "text-gray-700 hover:bg-gray-50"
+                      )}>
+                        <div className="flex items-center">
+                          <item.icon className="w-4 h-4 mr-2" />
+                          {item.name}
+                          <ChevronDown className="w-4 h-4 ml-auto" />
+                        </div>
+                      </div>
+                      <div className="pl-4 space-y-1">
+                        {item.items.map((subItem) => {
+                          const isSubActive = location.pathname === subItem.href;
+                          return (
+                            <Link
+                              key={subItem.name}
+                              to={subItem.href}
+                              className={cn(
+                                "block px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                                isSubActive
+                                  ? "bg-blue-50 text-blue-700"
+                                  : "text-gray-700 hover:bg-gray-50"
+                              )}
+                              onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                              <div className="flex items-center">
+                                <subItem.icon className="w-4 h-4 mr-2" />
+                                {subItem.name}
+                              </div>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                }
+
                 return (
                   <Link
                     key={item.name}

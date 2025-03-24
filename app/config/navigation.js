@@ -8,14 +8,48 @@ import {
   Network,
   LogOut,
   User,
+  ShoppingBag,
+  FolderTree,
 } from "lucide-react";
 
 export const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "Categories", href: "/categories", icon: Tags },
-  { name: "Products", href: "/products", icon: Package },
-  { name: "Customers", href: "/customers", icon: Users },
-  { name: "Settings", href: "/settings", icon: Settings },
+  {
+    name: "Dashboard",
+    href: "/",
+    icon: LayoutDashboard,
+  },
+  {
+    name: "Sales",
+    href: "/orders",
+    icon: ShoppingCart,
+    items: [
+      {
+        name: "Orders",
+        href: "/orders",
+        icon: ShoppingBag,
+      },
+      {
+        name: "Products",
+        href: "/products",
+        icon: Package,
+      },
+      {
+        name: "Categories",
+        href: "/categories",
+        icon: FolderTree,
+      },
+    ],
+  },
+  {
+    name: "Customers",
+    href: "/customers",
+    icon: Users,
+  },
+  {
+    name: "Settings",
+    href: "/settings",
+    icon: Settings,
+  },
 ];
 
 export const userNavigation = [
